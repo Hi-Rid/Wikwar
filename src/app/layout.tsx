@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Orbitron, Chakra_Petch } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const orbitron = Orbitron({
   subsets: ["latin"],
+  weight: ["800", "900"],
+  variable: "--font-orbitron",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const chakraPetch = Chakra_Petch({
   subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-chakra-petch",
 });
 
 export const metadata: Metadata = {
@@ -17,13 +19,18 @@ export const metadata: Metadata = {
   description: "Wikrama War — 2D browser fighting game",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body
+        className={`${orbitron.variable} ${chakraPetch.variable} font-sans bg-bg-base text-text-main antialiased overflow-hidden`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
