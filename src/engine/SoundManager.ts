@@ -1,3 +1,17 @@
+// src/engine/SoundManager.ts
+
+export type SoundEvent =
+    | "ui_move"
+    | "ui_select"
+    | "ui_back"
+    | "ui_start"
+    | "ui_denied"
+    | "move"
+    | "select"
+    | "back"
+    | "start"
+    | "denied";
+
 export class SoundManager {
     private ctx: AudioContext | null = null;
     private lastMoveTime = 0;
@@ -11,10 +25,15 @@ export class SoundManager {
         }
     }
 
-    private playTone(type: OscillatorType, freqStart: number, freqEnd: number, duration: number, gainVal: number, isNoise = false) {
+    private playTone(
+        type: OscillatorType,
+        freqStart: number,
+        freqEnd: number,
+        duration: number,
+        gainVal: number
+    ) {
         if (!this.ctx) return;
 
-        // Pitch random +-5%
         const pitchOffset = 1 + (Math.random() * 0.1 - 0.05);
         const freqS = freqStart * pitchOffset;
         const freqE = freqEnd * pitchOffset;
@@ -38,17 +57,19 @@ export class SoundManager {
         osc.stop(this.ctx.currentTime + duration);
     }
 
-    public play(event: "ui_move" | "ui_select" | "ui_back" | "ui_start" | "ui_denied") {
+    public play(event: SoundEvent) {
         if (!this.ctx) return;
 
-        switch (event) {
-            case "ui_move":
-                // Max 1 per 40ms
+        const normalized = event.startsWith("ui_") ? event : `ui_${event}`;
+
+        switch (normalized) {
+            case "ui_move": {
                 const now = Date.now();
                 if (now - this.lastMoveTime < 40) return;
                 this.lastMoveTime = now;
                 this.playTone("square", 1200, 1200, 0.04, 0.08);
                 break;
+            }
             case "ui_select":
                 this.playTone("triangle", 600, 900, 0.12, 0.1);
                 break;
@@ -56,7 +77,6 @@ export class SoundManager {
                 this.playTone("triangle", 500, 300, 0.1, 0.1);
                 break;
             case "ui_start":
-                // Simplified sweep + noise placeholder
                 this.playTone("sawtooth", 300, 1200, 0.25, 0.1);
                 break;
             case "ui_denied":
@@ -68,7 +88,6 @@ export class SoundManager {
 
 export const soundManager = new SoundManager();
 
-// Expose for Playwright testing (Fix SSR Error)
 if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
     (window as any).__soundManager = soundManager;
 }

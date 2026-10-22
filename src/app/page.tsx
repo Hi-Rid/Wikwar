@@ -1,6 +1,7 @@
+// src/app/page.tsx
 "use client";
 
-import { useState } from "react"; // <-- INI YANG KURANG TADI
+import { useState } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { TitleScreen } from "@/components/screens/TitleScreen";
 import { LobbyScreen } from "@/components/lobby/LobbyScreen";
@@ -12,15 +13,14 @@ import BattleScreen from "@/components/screens/BattleScreen";
 import { ROSTER_DATA } from "@/data/roster";
 import { soundManager } from "@/engine/SoundManager";
 
-// Mapping Roster
-const MAPPED_FIGHTERS: Fighter[] = ROSTER_DATA.map(r => ({
+const MAPPED_FIGHTERS: Fighter[] = ROSTER_DATA.map((r) => ({
   id: r.id,
   name: r.name,
   className: r.className || "Balanced",
   aura: {
     id: r.auraId || "orange",
     name: (r.auraId || "orange").charAt(0).toUpperCase() + (r.auraId || "orange").slice(1),
-    color: r.aura || "#FF6A00"
+    color: r.aura || "#FF6A00",
   },
   stats: r.stats,
   skills: [
@@ -32,7 +32,6 @@ const MAPPED_FIGHTERS: Fighter[] = ROSTER_DATA.map(r => ({
   artSrc: r.hasSprite ? "/assets/characters/char_1/ridho.png" : undefined,
 }));
 
-// Data Stage Dummy
 const STAGES: StageData[] = [
   { id: "lapangan", name: "LAPANGAN", description: "Open field with school building", imageSrc: "/assets/stages/wikrama.png" },
   { id: "lab", name: "LAB PPLG", description: "Computers, cables, and code", imageSrc: "/assets/stages/lab.png" },
@@ -42,21 +41,17 @@ const STAGES: StageData[] = [
 
 export default function Home() {
   const currentScreen = useGameStore((state) => state.currentScreen);
+  const currentFighterId = useGameStore((state) => state.currentFighter);
   const setScreen = useGameStore((state) => state.setScreen);
   const setFighter = useGameStore((state) => state.setFighter);
-  const currentFighterId = useGameStore((state) => state.currentFighter);
 
-  // State lokal (simulasi store buat stage & lawan)
   const [currentStage, setCurrentStage] = useState(STAGES[0]);
   const [opponent, setOpponent] = useState(MAPPED_FIGHTERS[1]);
 
-  // Ambil data fighter yang dipilih dari store (fallback ke Ridho)
   const player = MAPPED_FIGHTERS.find((f) => f.id === currentFighterId) || MAPPED_FIGHTERS[0];
-
 
   return (
     <main className="w-full h-full bg-black text-white font-sans overflow-hidden">
-
       {currentScreen === "TITLE" && <TitleScreen />}
       {currentScreen === "LOBBY" && <LobbyScreen />}
 
@@ -77,7 +72,7 @@ export default function Home() {
           stages={STAGES}
           onBack={() => setScreen("SELECT_CHARACTER")}
           onConfirm={(id) => {
-            const picked = STAGES.find(s => s.id === id) || STAGES[0];
+            const picked = STAGES.find((s) => s.id === id) || STAGES[0];
             setCurrentStage(picked);
             const randomOpp = MAPPED_FIGHTERS[Math.floor(Math.random() * MAPPED_FIGHTERS.length)];
             setOpponent(randomOpp);
