@@ -44,13 +44,15 @@ export default function Home() {
   const currentScreen = useGameStore((state) => state.currentScreen);
   const setScreen = useGameStore((state) => state.setScreen);
   const setFighter = useGameStore((state) => state.setFighter);
+  const currentFighterId = useGameStore((state) => state.currentFighter);
 
   // State lokal (simulasi store buat stage & lawan)
   const [currentStage, setCurrentStage] = useState(STAGES[0]);
   const [opponent, setOpponent] = useState(MAPPED_FIGHTERS[1]);
 
   // Ambil data fighter yang dipilih dari store (fallback ke Ridho)
-  const player = MAPPED_FIGHTERS[0];
+  const player = MAPPED_FIGHTERS.find((f) => f.id === currentFighterId) || MAPPED_FIGHTERS[0];
+
 
   return (
     <main className="w-full h-full bg-black text-white font-sans overflow-hidden">
@@ -104,7 +106,6 @@ export default function Home() {
         />
       )}
 
-      {currentScreen === "BATTLE" && <PlaceholderScreen name="BATTLE ENGINE (COMING SOON)" />}
       {currentScreen === "HOW_TO_PLAY" && <PlaceholderScreen name="HOW TO PLAY" />}
       {currentScreen === "SETTINGS" && <PlaceholderScreen name="SETTINGS" />}
     </main>
