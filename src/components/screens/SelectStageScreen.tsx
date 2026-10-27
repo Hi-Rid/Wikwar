@@ -1,7 +1,8 @@
+// src/components/screens/SelectStageScreen.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export interface StageData {
     id: string;
@@ -22,7 +23,6 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
 
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
-            // Navigasi 2D (Grid 2x2)
             const cols = 2;
             let nextIdx = selectedIdx;
 
@@ -35,8 +35,11 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
             } else if (e.code === "KeyW" || e.code === "ArrowUp") {
                 if (selectedIdx - cols >= 0) nextIdx = selectedIdx - cols;
             } else if (e.code === "Enter" || e.code === "KeyJ") {
-                playSound?.("select");
-                onConfirm(stages[selectedIdx].id);
+                const picked = stages[selectedIdx];
+                if (picked) {
+                    playSound?.("select");
+                    onConfirm(picked.id);
+                }
                 return;
             } else if (e.code === "Escape" || e.code === "KeyK") {
                 playSound?.("back");
@@ -56,13 +59,10 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
 
     return (
         <div className="fixed inset-0 bg-[#0A0A0D] text-white font-ui overflow-hidden flex flex-col">
-
-            {/* Background Grid & Glow */}
             <div className="absolute inset-0 pointer-events-none z-0 bg-[linear-gradient(rgba(255,106,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,106,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px]">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-orange/10 blur-[100px] rounded-full" />
             </div>
 
-            {/* Header */}
             <header className="relative z-10 flex justify-between items-center px-8 py-6 shrink-0 border-b border-white/10 bg-black/40 backdrop-blur-md">
                 <button onClick={onBack} className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group">
                     <div className="w-8 h-8 flex items-center justify-center bg-[#14141A] border border-white/20 group-hover:border-brand-orange [clip-path:polygon(0_0,100%_0,calc(100%-8px)_100%,0_100%)]">
@@ -75,7 +75,6 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
                 </div>
             </header>
 
-            {/* Content Area */}
             <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-8">
                 <div className="text-center mb-8">
                     <h1 className="font-display font-black text-4xl text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 tracking-wider">
@@ -84,35 +83,37 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
                     <p className="text-white/50 text-sm mt-2">The arena is purely cosmetic. Fight with honor.</p>
                 </div>
 
-                {/* Grid 2x2 */}
                 <div className="grid grid-cols-2 gap-6 max-w-4xl w-full">
                     {stages.map((stage, idx) => {
                         const isFocused = selectedIdx === idx;
                         return (
                             <button
                                 key={stage.id}
-                                onClick={() => { playSound?.("move"); setSelectedIdx(idx); }}
-                                onDoubleClick={() => { playSound?.("select"); onConfirm(stage.id); }}
+                                onClick={() => {
+                                    playSound?.("move");
+                                    setSelectedIdx(idx);
+                                }}
+                                onDoubleClick={() => {
+                                    playSound?.("select");
+                                    onConfirm(stage.id);
+                                }}
                                 className={`relative aspect-video bg-[#14141A] border-2 overflow-hidden outline-none transition-all duration-200 [clip-path:polygon(16px_0,100%_0,100%_calc(100%-16px),calc(100%-16px)_100%,0_100%,0_16px)] ${isFocused
                                         ? "border-brand-orange scale-[1.02] shadow-[0_0_30px_rgba(255,106,0,0.3)] z-10"
                                         : "border-white/10 opacity-60 hover:opacity-100 hover:border-white/30"
                                     }`}
                             >
-                                {/* Gambar Stage */}
                                 <img
                                     src={stage.imageSrc}
                                     alt={stage.name}
                                     className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${isFocused ? "scale-105" : "scale-100"}`}
                                     onError={(e) => {
-                                        // Fallback kalau gambar nggak ada
-                                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="100%" height="100%" fill="%2314141A"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-family="sans-serif" font-size="20">IMAGE NOT FOUND</text></svg>';
+                                        (e.target as HTMLImageElement).src =
+                                            'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="100%" height="100%" fill="%2314141A"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-family="sans-serif" font-size="20">IMAGE NOT FOUND</text></svg>';
                                     }}
                                 />
 
-                                {/* Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-                                {/* Text Overlay */}
                                 <div className="absolute bottom-0 left-0 w-full p-5 text-left flex justify-between items-end">
                                     <div>
                                         <h2 className={`font-display font-black italic tracking-widest text-2xl transition-colors ${isFocused ? "text-brand-orange" : "text-white"}`}>
@@ -131,7 +132,6 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
                                     )}
                                 </div>
 
-                                {/* Ornamen Sudut Fokus */}
                                 {isFocused && (
                                     <>
                                         <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-white/50" />
@@ -143,10 +143,15 @@ export default function SelectStageScreen({ stages, onConfirm, onBack, playSound
                     })}
                 </div>
 
-                {/* Tombol Lanjut */}
                 <div className="mt-10">
                     <button
-                        onClick={() => { playSound?.("select"); onConfirm(stages[selectedIdx].id); }}
+                        onClick={() => {
+                            const picked = stages[selectedIdx];
+                            if (picked) {
+                                playSound?.("select");
+                                onConfirm(picked.id);
+                            }
+                        }}
                         className="px-16 py-4 bg-gradient-to-r from-brand-orange to-brand-amber text-black font-display font-black italic text-xl tracking-widest [clip-path:polygon(16px_0,100%_0,calc(100%-16px)_100%,0_100%)] hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,106,0,0.4)]"
                     >
                         FIGHT HERE

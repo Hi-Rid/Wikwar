@@ -1,11 +1,20 @@
+// src/engine/InputManager.ts
 import { InputState } from "./types";
 
 export class InputManager {
     private keys: Set<string> = new Set();
     private buffer: Record<string, number> = {};
     public state: InputState = {
-        left: false, right: false, up: false, down: false,
-        attack: false, guard: false, special: false, dash: false, ex: false, ultimate: false
+        left: false,
+        right: false,
+        up: false,
+        down: false,
+        attack: false,
+        guard: false,
+        special: false,
+        dash: false,
+        ex: false,
+        ultimate: false,
     };
 
     constructor() {
@@ -37,15 +46,18 @@ export class InputManager {
         this.state.up = this.keys.has("KeyW") || this.keys.has("ArrowUp");
         this.state.down = this.keys.has("KeyS") || this.keys.has("ArrowDown");
 
-        this.state.attack = (this.buffer["KeyJ"] || 0) > 0; // PRD: J = Attack
-        this.state.guard = (this.buffer["KeyK"] || 0) > 0;  // PRD: K = Guard
-        this.state.special = (this.buffer["KeyL"] || 0) > 0;// PRD: L = Special
-        this.state.dash = (this.buffer["KeyU"] || 0) > 0;   // PRD: U = Dash
-        this.state.ex = (this.buffer["KeyI"] || 0) > 0;     // PRD: I = EX
-        this.state.ultimate = (this.buffer["KeyO"] || 0) > 0;// PRD: O = Ultimate
+        this.state.attack = (this.buffer["KeyJ"] ?? 0) > 0;
+        this.state.guard = (this.buffer["KeyK"] ?? 0) > 0;
+        this.state.special = (this.buffer["KeyL"] ?? 0) > 0;
+        this.state.dash = (this.buffer["KeyU"] ?? 0) > 0;
+        this.state.ex = (this.buffer["KeyI"] ?? 0) > 0;
+        this.state.ultimate = (this.buffer["KeyO"] ?? 0) > 0;
 
         for (const k in this.buffer) {
-            if (this.buffer[k] > 0) this.buffer[k]--;
+            const val = this.buffer[k];
+            if (val !== undefined && val > 0) {
+                this.buffer[k] = val - 1;
+            }
         }
     }
 

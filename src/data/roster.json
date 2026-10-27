@@ -1,0 +1,127 @@
+[
+    {
+        "id": "ridho",
+        "name": "Ridho",
+        "kelas": "RPL XII-4",
+        "aura": "#FF3B3B",
+        "role": "Balanced",
+        "stats": {
+            "hp": 1000,
+            "speed": 1.0,
+            "damage": 1.0
+        },
+        "special": {
+            "template": "S1",
+            "name": "Hello World"
+        },
+        "ultimate": {
+            "template": "U1",
+            "name": "Deploy to Production"
+        },
+        "passive": "P2",
+        "quote": "Deploy complete. Prepare to lose.",
+        "winQuote": "Build passed. You didn't.",
+        "loseQuote": "Rollback... I'll fix it in the next commit.",
+        "visual": "buzz-cut black hair, strong eyebrows, big dark-grey eyes with highlights, blush on cheeks, small black dots near the outer corners of the eyes, grey glen-check double-breasted blazer with black lapels, white shirt, black tie, wide black trousers, glossy black shoes"
+    },
+    {
+        "id": "steven",
+        "name": "Steven",
+        "kelas": "RPL XII-4",
+        "aura": "#FF6A00",
+        "role": "Rushdown",
+        "stats": {
+            "hp": 900,
+            "speed": 1.15,
+            "damage": 1.0
+        },
+        "special": {
+            "template": "S4",
+            "name": "Hot Reload"
+        },
+        "ultimate": {
+            "template": "U3",
+            "name": "Infinite Loop"
+        },
+        "passive": "P6",
+        "quote": "Faster than your Wi-Fi.",
+        "winQuote": "Loading screen? I skipped it.",
+        "loseQuote": "Lag. It was definitely lag.",
+        "visual": "TODO"
+    },
+    {
+        "id": "fadhiil",
+        "name": "Fadhiil",
+        "kelas": "RPL XII-4",
+        "aura": "#2F8CFF",
+        "role": "Zoner",
+        "stats": {
+            "hp": 950,
+            "speed": 1.0,
+            "damage": 0.95
+        },
+        "special": {
+            "template": "S8",
+            "name": "Triple Commit"
+        },
+        "ultimate": {
+            "template": "U2",
+            "name": "DDoS Storm"
+        },
+        "passive": "P7",
+        "quote": "Ping sent. Damage received.",
+        "winQuote": "Out of range. Out of luck.",
+        "loseQuote": "Connection timed out.",
+        "visual": "TODO"
+    },
+    {
+        "id": "berliana",
+        "name": "Berliana",
+        "kelas": "RPL XII-4",
+        "aura": "#22D36B",
+        "role": "Tank",
+        "stats": {
+            "hp": 1150,
+            "speed": 0.85,
+            "damage": 1.05
+        },
+        "special": {
+            "template": "S3",
+            "name": "Firewall Uppercut"
+        },
+        "ultimate": {
+            "template": "U4",
+            "name": "Kernel Panic"
+        },
+        "passive": "P1",
+        "quote": "Firewall up. Try me.",
+        "winQuote": "Access denied.",
+        "loseQuote": "Firewall breached... who gave you the password?",
+        "visual": "TODO"
+    },
+    {
+        "id": "sahra",
+        "name": "Sahra",
+        "kelas": "RPL XII-4",
+        "aura": "#A855F7",
+        "role": "Counter",
+        "stats": {
+            "hp": 1000,
+            "speed": 1.0,
+            "damage": 0.95
+        },
+        "special": {
+            "template": "S6",
+            "name": "Try / Catch"
+        },
+        "ultimate": {
+            "template": "U5",
+            "name": "Segmentation Fault"
+        },
+        "passive": "P5",
+        "quote": "Request denied. Returning damage.",
+        "winQuote": "Exception handled.",
+        "loseQuote": "Unexpected error. I blame the compiler.",
+        "visual": "TODO"
+    }
+]

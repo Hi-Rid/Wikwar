@@ -10,10 +10,10 @@ import SelectCharacterScreen, { Fighter } from "@/components/screens/SelectChara
 import SelectStageScreen, { StageData } from "@/components/screens/SelectStageScreen";
 import VsIntroScreen from "@/components/screens/VsIntroScreen";
 import BattleScreen from "@/components/screens/BattleScreen";
-import { ROSTER_DATA } from "@/data/roster";
+import { ROSTER_DATA, CharacterData } from "@/data/roster";
 import { soundManager } from "@/engine/SoundManager";
 
-const MAPPED_FIGHTERS: Fighter[] = ROSTER_DATA.map((r) => ({
+const MAPPED_FIGHTERS: Fighter[] = ROSTER_DATA.map((r: CharacterData) => ({
   id: r.id,
   name: r.name,
   className: r.className || "Balanced",
@@ -32,6 +32,23 @@ const MAPPED_FIGHTERS: Fighter[] = ROSTER_DATA.map((r) => ({
   artSrc: r.hasSprite ? "/assets/characters/char_1/ridho.png" : undefined,
 }));
 
+const DEFAULT_FIGHTER: Fighter = MAPPED_FIGHTERS[0] ?? {
+  id: "ridho",
+  name: "RIDHO",
+  className: "Balanced",
+  aura: { id: "red", name: "Red", color: "#FF3B3B" },
+  stats: { hp: 1000, speed: 1.0, damage: 1.0 },
+  skills: [
+    { id: "special", type: "special", name: "Hello World" },
+    { id: "ultimate", type: "ultimate", name: "Deploy to Production" },
+    { id: "passive", type: "passive", name: "P2" },
+  ],
+  quote: "Deploy complete. Prepare to lose.",
+  artSrc: "/assets/characters/char_1/ridho.png",
+};
+
+const DEFAULT_OPPONENT: Fighter = MAPPED_FIGHTERS[1] ?? DEFAULT_FIGHTER;
+
 const STAGES: StageData[] = [
   { id: "lapangan", name: "LAPANGAN", description: "Open field with school building", imageSrc: "/assets/stages/wikrama.png" },
   { id: "lab", name: "LAB PPLG", description: "Computers, cables, and code", imageSrc: "/assets/stages/lab.png" },
@@ -39,16 +56,24 @@ const STAGES: StageData[] = [
   { id: "rooftop", name: "ROOFTOP", description: "City skyline at dusk", imageSrc: "/assets/stages/rooftop.png" },
 ];
 
+const DEFAULT_STAGE: StageData = STAGES[0] ?? {
+  id: "lapangan",
+  name: "LAPANGAN",
+  description: "Open field with school building",
+  imageSrc: "/assets/stages/wikrama.png",
+};
+
 export default function Home() {
   const currentScreen = useGameStore((state) => state.currentScreen);
   const currentFighterId = useGameStore((state) => state.currentFighter);
   const setScreen = useGameStore((state) => state.setScreen);
   const setFighter = useGameStore((state) => state.setFighter);
 
-  const [currentStage, setCurrentStage] = useState(STAGES[0]);
-  const [opponent, setOpponent] = useState(MAPPED_FIGHTERS[1]);
+  const [currentStage, setCurrentStage] = useState<StageData>(DEFAULT_STAGE);
+  const [opponent, setOpponent] = useState<Fighter>(DEFAULT_OPPONENT);
 
-  const player = MAPPED_FIGHTERS.find((f) => f.id === currentFighterId) || MAPPED_FIGHTERS[0];
+  const player: Fighter =
+    MAPPED_FIGHTERS.find((f) => f.id === currentFighterId) ?? DEFAULT_FIGHTER;
 
   return (
     <main className="w-full h-full bg-black text-white font-sans overflow-hidden">
@@ -72,9 +97,12 @@ export default function Home() {
           stages={STAGES}
           onBack={() => setScreen("SELECT_CHARACTER")}
           onConfirm={(id) => {
-            const picked = STAGES.find((s) => s.id === id) || STAGES[0];
+            const picked = STAGES.find((s) => s.id === id) ?? DEFAULT_STAGE;
             setCurrentStage(picked);
-            const randomOpp = MAPPED_FIGHTERS[Math.floor(Math.random() * MAPPED_FIGHTERS.length)];
+            // PRD 4.4: lawan Quick Match selalu acak dan tidak pernah sama dengan pemain
+            const pool = MAPPED_FIGHTERS.filter((f) => f.id !== player.id);
+            const randomOpp =
+              pool[Math.floor(Math.random() * pool.length)] ?? DEFAULT_OPPONENT;
             setOpponent(randomOpp);
             setScreen("VS_INTRO");
           }}
